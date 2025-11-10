@@ -124,7 +124,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://client-db:5432/clientdb
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
@@ -141,4 +141,6 @@ volumes:
 
 networks:
   ms-network:
+#    external: true
+    name: ms-network
     driver: bridge

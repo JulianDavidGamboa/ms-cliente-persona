@@ -4,7 +4,7 @@ spring:
   application:
     name: client-ms
   datasource:
-    url: jdbc:postgresql://localhost:5433/clientdb
+    url: jdbc:postgresql://localhost:5434/clientdb
     username: postgres
     password: password
   jpa:
@@ -15,7 +15,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:29092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -28,7 +28,21 @@ spring:
 resilience4j:
   circuitbreaker:
     instances:
-      default:
+      clientValidation:
         slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 30s
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        recordExceptions:
+          - feign.FeignException
+          - java.net.ConnectException
+          - java.net.SocketTimeoutException
+          - java.io.IOException
+  retry:
+    instances:
+      clientValidation:
+        maxAttempts: 3
+        waitDuration: 500ms
 environment:
   - SPRING_PROFILES_ACTIVE=docker
