@@ -11,6 +11,18 @@ Cumple con separación de responsabilidades, arquitectura hexagonal, patrones Re
 ## Documentacion Postman
 https://documenter.getpostman.com/view/8056845/2sB3Wtre3N
 
+## Como ejecutar el microservicio
+1. Existen dos microservicios **ms-cliente-persona** y **ms-cuenta-movimiento**.
+2. Primero debe ejecutar el microservicio **ms-cliente-persona** con el siguiente comando:
+   ```bash
+   docker compose up -d
+   ```
+   **NOTA**: Se hace de esta forma porque este microservicio contiene el zookeeper, kafka, redis, las bases de datos y el microservicio ms-cliente-persona.
+3. Despues de leventar el microservicio ms-cliente-persona, debe dirigirse al repopsitorio **ms-cuenta-movimiento** ejecutar el microservicio con el siguiente comando:
+   ```bash
+   docker compose up -d
+   ```
+
 ## Coleccion de Postman
 La coleccion de postman se encuentra en la ruta: src/main/resources/request/BANK.postman_collection.json
 
