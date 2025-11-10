@@ -18,7 +18,7 @@ services:
       timeout: 5s
       retries: 5
 
-  # ------------------- Kafka (CONFIGURACIÓN CORREGIDA) -------------------
+  # ------------------- Kafka -------------------
   kafka:
     image: confluentinc/cp-kafka:7.6.0
     container_name: kafka
