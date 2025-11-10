@@ -1,44 +1,25 @@
 package com.mybank.msclientepersona.domain.model;
 
 public class Person {
-
-    private Long id;
     private String name;
     private String gender;
-    private Integer age;
+    private int age;
+    private String identification;
     private String address;
-    private String phone_number;
+    private String phone;
 
-    public Person(String name, String gender, int age, Long id, String address, String phone_number) {
-        this.validarDatos(name, id);
+    public Person() {}
+
+    public Person(String name, String gender, int age, String identification, String address, String phone) {
         this.name = name;
         this.gender = gender;
         this.age = age;
-        this.id = id;
+        this.identification = identification;
         this.address = address;
-        this.phone_number = phone_number;
+        this.phone = phone;
     }
 
-    public void validarDatos(String name, Long id) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del persona es obligatorio");
-        }
-        if (id == null) {
-            throw new IllegalArgumentException("El id del persona es obligatorio");
-        }
-    }
-
-    public void actualizarDatos(String name, String gender, Integer age,
-                                String address, String phoneNumber) {
-        if (name != null && !name.trim().isEmpty()) {
-            this.name = name;
-        }
-        this.gender = gender;
-        this.age = age;
-        this.address = address;
-        this.phone_number = phoneNumber;
-    }
-
+    // Getters and setters
     public String getName() {
         return name;
     }
@@ -55,20 +36,20 @@ public class Person {
         this.gender = gender;
     }
 
-    public Integer getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
-    public Long getId() {
-        return id;
+    public String getIdentification() {
+        return identification;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdentification(String identification) {
+        this.identification = identification;
     }
 
     public String getAddress() {
@@ -79,11 +60,11 @@ public class Person {
         this.address = address;
     }
 
-    public String getPhone_number() {
-        return phone_number;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

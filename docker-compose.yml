@@ -1,0 +1,150 @@
+name: ms-cliente
+
+services:
+  # ------------------- Zookeeper -------------------
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: zookeeper
+    networks:
+      - ms-network
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ------------------- Kafka (CONFIGURACIÓN CORREGIDA) -------------------
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: kafka
+    networks:
+      - ms-network
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - "9092:9092" # Puerto para acceder desde la máquina anfitriona (host)
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      # Listener interno: Accesible por otros contenedores a través del nombre 'kafka' en el puerto 29092
+      # Listener externo: Accesible desde el host (su máquina) a través de localhost:9092
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL # Comunicación entre brokers usa el listener INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+    healthcheck:
+      # El healthcheck usa la dirección del listener interno (kafka:29092) o la dirección dentro del contenedor (localhost:29092)
+      # Usaremos la dirección interna mapeada al puerto 29092 para evitar conflictos de anuncio.
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:29092", "--list"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  # ------------------- Redis (caché para reportes) -------------------
+  redis:
+    image: redis:7.4-alpine
+    container_name: redis
+    networks:
+      - ms-network
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ------------------- Base de datos Cliente -------------------
+  client-db:
+    image: postgres:16-alpine
+    container_name: client-db
+    networks:
+      - ms-network
+    environment:
+      POSTGRES_DB: clientdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    volumes:
+      - client-db-data:/var/lib/postgresql/data
+      - ./BaseDatos.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d clientdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ------------------- Base de datos Cuenta -------------------
+  account-db:
+    image: postgres:16-alpine
+    container_name: account-db
+    networks:
+      - ms-network
+    environment:
+      POSTGRES_DB: accountdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5434:5432"
+    volumes:
+      - account-db-data:/var/lib/postgresql/data
+      - ./BaseDatos.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d accountdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ------------------- Microservicio Cliente -------------------
+  client-ms:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: client-ms
+    networks:
+      - ms-network
+    ports:
+      - "8081:8081"
+    depends_on:
+      client-db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://client-db:5432/clientdb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - ./ms-cliente-persona:/app
+
+# ------------------- Volúmenes persistentes -------------------
+volumes:
+  client-db-data:
+  account-db-data:
+
+networks:
+  ms-network:
+    driver: bridge
