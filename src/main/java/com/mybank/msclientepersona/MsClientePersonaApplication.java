@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.kafka.annotation.EnableKafka;
 
-@SpringBootApplication(scanBasePackages = "com.mybank.msclientepersona")
+@SpringBootApplication
 @EnableFeignClients
 @EnableKafka
 public class MsClientePersonaApplication {

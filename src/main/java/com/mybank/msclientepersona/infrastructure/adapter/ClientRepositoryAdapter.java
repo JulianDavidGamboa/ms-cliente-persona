@@ -42,4 +42,6 @@ public class ClientRepositoryAdapter implements ClientRepositoryPort {
     public void deleteById(String id) {
         jpaRepository.deleteById(id);
     }
+
+
 }
