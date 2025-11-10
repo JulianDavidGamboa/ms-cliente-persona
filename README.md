@@ -8,6 +8,12 @@ Implementa las funcionalidades **F1 (CRUD Clientes)** y **F5 (Pruebas unitarias)
 **Nivel alcanzado: Senior**  
 Cumple con separación de responsabilidades, arquitectura hexagonal, patrones Repository, y comunicación asíncrona hacia `ms-cuenta-movimiento`.
 
+## Documentacion Postman
+https://documenter.getpostman.com/view/8056845/2sB3Wtre3N
+
+## Coleccion de Postman
+La coleccion de postman se encuentra en la ruta: src/main/resources/request/BANK.postman_collection.json
+
 ## Tecnologías
 - Java 21
 - Spring Boot 3.5.7
