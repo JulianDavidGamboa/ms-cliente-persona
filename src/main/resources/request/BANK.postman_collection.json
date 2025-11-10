@@ -1,0 +1,227 @@
+{
+	"info": {
+		"_postman_id": "a386b3dc-c0a6-4b35-92fe-d57d90d0f7b1",
+		"name": "BANK",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8056845"
+	},
+	"item": [
+		{
+			"name": "CLIENT",
+			"item": [
+				{
+					"name": "Create Client",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Saki Aoi\",\r\n  \"gender\": \"F\",\r\n  \"age\": 35,\r\n  \"identification\": \"1232413123\",\r\n  \"address\": \"Prueba\",\r\n  \"phone\": \"4123124123\",\r\n  \"password\": \"1234\",\r\n  \"active\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/clients",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Clients",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/clients",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Client",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/clients/99fc9b03-c247-4558-96ac-d8ee64d60f4b",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"clients",
+								"99fc9b03-c247-4558-96ac-d8ee64d60f4b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Client",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Julian David Gamboa\",\r\n  \"phone\": \"123412312413413\",\r\n  \"active\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/clients/99fc9b03-c247-4558-96ac-d8ee64d60f4b",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"clients",
+								"99fc9b03-c247-4558-96ac-d8ee64d60f4b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ACTUATOR",
+			"item": [
+				{
+					"name": "health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/actuator/health",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"actuator",
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ACCOUNT",
+			"item": [
+				{
+					"name": "Create Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"accountNumber\": \"123141\",\r\n  \"accountType\": \"Ahorro\",\r\n  \"initialBalance\": 4000,\r\n  \"active\": true,\r\n  \"clientId\": \"7d855f83-3b34-4eaf-8b2f-8e4a545025a7\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/accounts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": -600,\r\n  \"accountNumber\": \"478758\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/movimientos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"movimientos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/reportes?clientId=99fc9b03-c247-4558-96ac-d8ee64d60f4b&fechaInicio=2025-11-01&fechaFin=2025-11-09",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"reportes"
+							],
+							"query": [
+								{
+									"key": "clientId",
+									"value": "99fc9b03-c247-4558-96ac-d8ee64d60f4b"
+								},
+								{
+									"key": "fechaInicio",
+									"value": "2025-11-01"
+								},
+								{
+									"key": "fechaFin",
+									"value": "2025-11-09"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

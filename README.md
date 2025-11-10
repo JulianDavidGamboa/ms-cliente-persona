@@ -1,0 +1,62 @@
+# bank-client-ms
+**Microservicio de Clientes y Personas - Prueba Técnica Arquitectura Microservicios (Senior)**
+
+## Descripción
+Microservicio responsable de gestionar **Personas** y **Clientes** del banco.  
+Implementa las funcionalidades **F1 (CRUD Clientes)** y **F5 (Pruebas unitarias)** del requerimiento.
+
+**Nivel alcanzado: Senior**  
+Cumple con separación de responsabilidades, arquitectura hexagonal, patrones Repository, y comunicación asíncrona hacia `ms-cuenta-movimiento`.
+
+## Tecnologías
+- Java 21
+- Spring Boot 3.5.7
+- Spring Data JPA
+- Spring Kafka
+- PostgreSQL
+- Maven
+- Docker
+
+## Arquitectura
+```plaintext
+src/main/java/com/mybank/client/
+└───msclientepersona
+    ├───application
+    │   ├───dto
+    │   ├───mapper
+    │   ├───rest
+    │   └───service
+    ├───domain
+    │   ├───event
+    │   ├───exception
+    │   ├───model
+    │   ├───port
+    │   │   └───out
+    │   └───usecase
+    └───infrastructure
+        └───adapter
+            └───jpa
+                ├───entity
+                └───repository
+```
+
+
+
+## Endpoints (F1)
+| Método | Endpoint           | Descripción               |
+|--------|--------------------|---------------------------|
+| POST   | `/clients`         | Crear cliente             |
+| GET    | `/clients/{id}`    | Obtener cliente por ID    |
+| PUT    | `/clients/{id}`    | Actualizar cliente        |
+| DELETE | `/clients/{id}`    | Eliminar cliente          |
+| GET    | `/clients`         | Listar todos los clientes |
+
+## Comunicación Asíncrona (Senior)
+Al crear, actualizar o eliminar un cliente, se publica un evento en Kafka:
+```json
+{
+  "eventId": "uuid",
+  "eventType": "CREATED|UPDATED|DELETED",
+  "clientId": "string",
+  "name": "Jose Lema"
+}
