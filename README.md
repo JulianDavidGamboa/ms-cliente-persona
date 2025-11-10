@@ -1,4 +1,4 @@
-# bank-client-ms
+# ms-cliente-persona
 **Microservicio de Clientes y Personas - Prueba Técnica Arquitectura Microservicios (Senior)**
 
 ## Descripción
@@ -30,6 +30,7 @@ La coleccion de postman se encuentra en la ruta: src/main/resources/request/BANK
 - Java 21
 - Spring Boot 3.5.7
 - Spring Data JPA
+- Redis
 - Spring Kafka
 - PostgreSQL
 - Maven
